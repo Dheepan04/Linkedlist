@@ -1,85 +1,103 @@
 #include<iostream>
 using namespace std;
 
-struct Node{
+struct Node {
     int data;
-    struct Node *next;
-}*head=NULL;
+    Node* next;
+};
 
-void create(int A[],int n){
-    struct Node *t,*last;
-    int i;
-    head=new Node[sizeof(struct Node)];
-    head->data=A[0];
-    head->next=NULL;
-    last=head;
-    for(i=1;i<n;i++){
-        t= new Node[sizeof(struct Node)];
-        t->data=A[i];
-        t->next=NULL;
-        last->next=t;
-        last=t;
+Node* createLinkedList(int A[], int n) {
+    Node* head = nullptr;
+    Node* tail = nullptr;
+
+    for (int i = 0; i < n; i++) {
+        Node* newNode = new Node;
+        newNode->data = A[i];
+        newNode->next = nullptr;
+
+        if (!head) {
+            head = newNode;
+            tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
     }
+    return head;
 }
-void insertfront(int x){
-    struct Node *newnode= new Node[sizeof(struct Node)];
-    newnode->data=x;
-    newnode->next=head;
-    head=newnode;
+
+void insertFront(Node*& head, int x) {
+    Node* newNode = new Node;
+    newNode->data = x;
+    newNode->next = head;
+    head = newNode;
 }
-void display(struct Node *p){
-    while(p!=NULL){
-        cout<<p->data<<" ";
-        p=p->next;
-    }
-    cout<<endl;
-}
-void insertatpos(int pos,int x){
-    if(pos<0){
-        cout<<"Invalid position "<<endl;
-        return ;
-    }
-    struct Node *newnode=new Node[sizeof(struct Node)];
-    newnode->data=x;
-    if(pos==0){
-        newnode->next=head;
-        head=newnode;
+
+void insertAtPos(Node*& head, int pos, int x) {
+    if (pos < 0) {
+        cout << "Invalid position" << endl;
         return;
     }
-    struct Node *current=head;
-    int count=0;
-    while(current!=nullptr&&count<pos - 1){
-        current=current->next;
+
+    Node* newNode = new Node;
+    newNode->data = x;
+    newNode->next = nullptr;
+
+    if (pos == 0) {
+        newNode->next = head;
+        head = newNode;
+        return;
+    }
+
+    Node* current = head;
+    int count = 0;
+
+    while (current != nullptr && count < pos - 1) {
+        current = current->next;
         count++;
     }
-    if(current==nullptr){
-        cout<<"out of bounds"<<endl;
+
+    if (current == nullptr) {
+        cout << "Out of bounds" << endl;
         return;
     }
-    newnode->next=current->next;
-    current->next=newnode;
 
+    newNode->next = current->next;
+    current->next = newNode;
 }
 
-int main(){
-    int A[]={10,20,30,40,50};
-    int position;
-    create(A,5);
-    cout<<"original linkedlist is : ";
+void display(Node* head) {
+    while (head != nullptr) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+int main() {
+    int A[] = {10, 20, 30, 40, 50};
+    int position, element;
+
+    Node* head = createLinkedList(A, 5);
+
+    cout << "Original linked list is: ";
     display(head);
-    int element;
-    cout<<"enter the element to insert :";
-    cin>>element;
+
+    cout << "Enter the element to insert: ";
+    cin >> element;
+
     cout << "Enter the position (0-based index) to insert at: ";
     cin >> position;
-    insertatpos(position,element);
-    cout<<"updated LinkedList : "<<endl;
+
+    insertAtPos(head, position, element);
+
+    cout << "Updated LinkedList: " << endl;
     display(head);
-    insertfront(element);
-    cout<<"updated LinkedList : "<<endl;
+
+    insertFront(head, element);
+
+    cout << "Updated LinkedList (after inserting at front): " << endl;
     display(head);
 
     return 0;
-
-
 }
